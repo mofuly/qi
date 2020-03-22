@@ -110,7 +110,7 @@ function showPicture() {
     for (var i = 0; i < meridians.length; i++) {
         eleImage = document.getElementById(meridians[i].id);
         if (!eleImage) continue;
-        if (menu.selectedIndex === i) {
+        if (menu.selectedIndex === i + 1) {
             eleImage.className = "appear";
         } else {
             eleImage.className = "disappear";
