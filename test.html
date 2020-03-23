@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>穴位学习</title>
+    <style>
+        .image {
+            position: relative;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 0;
+            padding-top: 100%;
+        }
+
+        img {
+            position: absolute;
+            left: 0;
+            top: 0;
+            /* width: 100%; */
+            height: 100%;
+        }
+
+        .disappear {
+            visibility: hidden;
+        }
+
+        .appear {
+            visibility: visible;
+        }
+    </style>
+</head>
+
+<body>
+    <select id="menu"></select>
+    <button id="test" type="button" class="disappear">默写</button>
+    <button id="hint" type="button" class="disappear">提示</button></br>
+    <span id="order" class="disappear"></span>
+    <span id="hintText" color="red"></span>
+    <input id="dictation" class="disappear" type="text" value=""></input>
+    <br>
+    <area id="dictationList" class="disappear"></area>
+    <area id="acupoint"></area>
+    <div class="wrapper">
+        <div class="image disappear">
+            <img src="http://p1.pstatp.com/large/2eda0004e2134dfc578e" id="duMai"></img>
+            <img src="http://p1.pstatp.com/large/2ed40004f6e6a9eb498b" id="fei">
+            <img src="http://p3.pstatp.com/large/2ed40004f6e52a6bddcc" id="daChang">
+            <img src="http://p3.pstatp.com/large/2edc0004d4e0ae5915e1" id="wei">
+            <img src="http://p1.pstatp.com/large/2ecd0002064cb5b4f1ea" id="pi">
+            <img src="http://p1.pstatp.com/large/2ed500015ce7b31354dc" id="xin">
+            <img src="http://p3.pstatp.com/large/2ed500015ce82c57737a" id="xiaoChang">
+            <img src="http://p1.pstatp.com/large/2edc0004d4e132f9cad8" id="pangGuan">
+            <img src="http://p1.pstatp.com/large/2ed40004f6e7209c7c4e" id="shen">
+            <img src="http://p1.pstatp.com/large/2eda0004e2159280d7fb" id="xinBao">
+            <img src="http://p3.pstatp.com/large/2ecf0002051f9523e0b8" id="sanJiao">
+            <img src="http://p1.pstatp.com/large/2ed500015ce5231f078d" id="dan">
+            <img src="http://p9.pstatp.com/large/2edc0004d4df138e5577" id="gang">
+            <img src="http://p3.pstatp.com/large/2ed500015ce6365631ef" id="renMai">
+        </div>
+    </div>
+    <!-- <audio id="voiceAd">
+        <source id="voiceSr" src="" type="audio/mpeg">
+    </audio> -->
+    <script src="test.js"></script>
+</body>
+
+</html>
