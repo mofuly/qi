@@ -107,12 +107,11 @@ var test = document.getElementById("test");
 var hint = document.getElementById("hint");
 var hintText = document.getElementById("hintText");
 var order = document.getElementById("order");
-var voiceAdDoc = document.getElementById("voiceAd");
-var voiceSrDoc = document.getElementById("voiceSr");
+var currentMeridianIndex = -1;
 var currentAcupointIndex = 0;
 var currentList = "";
 
-var reciting = false;
+var isReciting = false;
 var opt = [];
 opt.push("<option>00 请选择...</option>");
 for (var i = 0; i < meridians.length; i++) {
@@ -177,7 +176,6 @@ function disableDictating() {
     hint.className = "disappear";
     hintText.className = "disappear";
     dictationList.className = "disappear";
-    dictationList.innerHTML = "";
     order.className = "disappear";
     dictation.className = "disappear";
     acupoint.className = "appear";
@@ -203,13 +201,13 @@ function showhint() {
 }
 
 function recite() {
-    if (reciting) {
+    if (isReciting) {
         finish();
         return;
     }
-    currentAcupointIndex = 0;
-    currentList = "";
-    reciting = true;
+    //currentAcupointIndex = 0;
+    //currentList = "";
+    isReciting = true;
     test.innerHTML = "交卷"
     hideContent();
     menu.disabled = "disabled";
@@ -255,7 +253,7 @@ function reciteChanged() {
 
 function finish() {
     test.innerHTML = "默写";
-    reciting = false;
+    isReciting = false;
 
     disableDictating();
     hint.className = "disappear";
@@ -278,6 +276,12 @@ function showContent() {
         list = [];
 
     var selectedIndex = menu.selectedIndex;
+    if (currentMeridianIndex !== selectedIndex) {
+        currentMeridianIndex = selectedIndex;
+        currentList = "";
+        currentAcupointIndex = 0;
+        dictationList.innerHTML = currentList;
+    }
     if (selectedIndex > 0) {
         col = 0;
         rows = 0;
