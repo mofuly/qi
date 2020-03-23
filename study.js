@@ -262,6 +262,7 @@ function finish() {
     if (menu.selectedIndex > 0) {
         test.className = "appear";
     }
+    dictation.value = "";
     showPicture();
 }
 
