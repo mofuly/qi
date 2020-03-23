@@ -216,7 +216,7 @@ function recite() {
 function reciteChanged() {
     var written = dictation.value.replace(/^\s*|\s*$/g, "");
     var currentAcupoint = meridians[menu.selectedIndex - 1].acupoint[currentAcupointIndex].replace(/^\s*|\s*$/g, "");
-    if (written === currentAcupoint) {
+    if (written === currentAcupoint || written.replace("兪", "俞") === currentAcupoint || written.replace("俞", "兪") === currentAcupoint) {
         currentList += size(written) + " ";
         currentAcupointIndex++;
         if (currentAcupointIndex % 5 === 0) currentList += "<br>";
