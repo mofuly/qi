@@ -106,8 +106,15 @@ var test = document.getElementById("test");
 var hint = document.getElementById("hint");
 var hintText = document.getElementById("hintText");
 var order = document.getElementById("order");
+var voiceAdDoc = document.getElementById("voiceAd");
+var voiceSrDoc = document.getElementById("voiceSr");
+var voiceEdDoc = document.getElementById("voiceEd");
 var currentAcupointIndex = 0;
 var currentList = "";
+var utterThis = new window.SpeechSynthesisUtterance('你好，世界！');
+var synth = window.speechSynthesis;
+
+synth.speak(utterThis);
 
 var reciting = false;
 var opt = [];
@@ -213,6 +220,23 @@ function recite() {
     dictation.focus();
 }
 
+function play(text) {
+    var zhText = encodeURI(encodeURI(text));
+    var voicebbUrl = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=3&text=" + zhText;
+    voiceSrDoc.src = voicebbUrl;
+    voiceEdDoc.src = voicebbUrl;
+    voiceAdDoc.play();
+}
+
+function playMeridian() {
+    var len, i;
+    if (menu.selectedIndex < 1) return;
+    len = meridians[menu.selectedIndex - 1].acupoint.length;
+    for (i = 0; i < len; i++) {
+        play(meridians[menu.selectedIndex - 1].acupoint[i]);
+    }
+}
+
 function reciteChanged() {
     var written = dictation.value.replace(/^\s*|\s*$/g, "");
     var currentAcupoint = meridians[menu.selectedIndex - 1].acupoint[currentAcupointIndex].replace(/^\s*|\s*$/g, "");
@@ -285,4 +309,6 @@ function showContent() {
         disableDictating();
     }
     showPicture();
+    playMeridian();
+
 }
