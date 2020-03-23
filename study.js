@@ -148,7 +148,11 @@ function showPicture() {
             eleImage.className = "disappear";
         }
     }
-    playVoice.className = "appear";
+    if (window.speechSynthesis) {
+        playVoice.className = "appear";
+    } else {
+        playVoice.className = "disappear";
+    }
 }
 
 function ord(i) {
