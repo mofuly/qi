@@ -99,6 +99,7 @@ var meridians = [{
 ];
 
 var menu = document.getElementById("menu");
+var playVoice = document.getElementById("playVoice");
 var acupoint = document.getElementById("acupoint");
 var dictation = document.getElementById("dictation");
 var dictationList = document.getElementById("dictationList");
@@ -123,6 +124,7 @@ menu.addEventListener("change", showContent);
 test.addEventListener("click", recite);
 hint.addEventListener("click", showhint);
 dictation.addEventListener("keyup", reciteChanged);
+playVoice.addEventListener("click", playMeridian);
 
 function hidePicture() {
     var eleImage;
@@ -146,6 +148,7 @@ function showPicture() {
             eleImage.className = "disappear";
         }
     }
+    playVoice.className = "appear";
 }
 
 function ord(i) {
@@ -191,6 +194,7 @@ function showhint() {
     if (menu.selectedIndex < 1) return;
     hint = meridians[menu.selectedIndex - 1].acupoint[currentAcupointIndex];
     hintText.innerHTML = hint;
+    play(hint);
     dictation.focus();
 }
 
@@ -205,6 +209,7 @@ function recite() {
     test.innerHTML = "交卷"
     hideContent();
     menu.disabled = "disabled";
+    playVoice.className = "disappear";
     hint.className = "appear";
     dictation.className = "appear";
     hintText.className = "appear";
@@ -214,23 +219,16 @@ function recite() {
     order.innerHTML = ord(currentAcupointIndex + 1);
     dictation.focus();
 }
-/*
+
 function play(text) {
-    var zhText = encodeURI(encodeURI(text));
-    var voicebbUrl = "http://tts.baidu.com/text2audio?lan=zh&ie=UTF-8&spd=3&text=" + zhText;
-    voiceSrDoc.src = voicebbUrl;
-    voiceAdDoc.play();
+    var utter = new SpeechSynthesisUtterance(text);
+    speechSynthesis.speak(utter);
 }
 
 function playMeridian() {
-    var len, i;
     if (menu.selectedIndex < 1) return;
-    len = meridians[menu.selectedIndex - 1].acupoint.length;
-    for (i = 0; i < len; i++) {
-        play(meridians[menu.selectedIndex - 1].acupoint[i]);
-    }
+    play(meridians[menu.selectedIndex - 1].acupoint.join("，"));
 }
-*/
 
 function reciteChanged() {
     var written = dictation.value.replace(/^\s*|\s*$/g, "");
@@ -256,6 +254,7 @@ function finish() {
     reciting = false;
 
     disableDictating();
+    hint.className = "disappear";
     if (menu.selectedIndex > 0) {
         test.className = "appear";
     }
@@ -304,6 +303,6 @@ function showContent() {
         disableDictating();
     }
     showPicture();
-    //playMeridian();
+    //    playMeridian();
 
 }
