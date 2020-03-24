@@ -66,7 +66,7 @@ var meridians = [{
         name: "手少阳三焦经 23穴",
         pic: "sanJiao.jpeg",
         cols: [5, 5, 5, 5, 3],
-        acupoint: ["关冲", "液门", "中渚", "阳池", "外关", "支沟", "会宗", "三阳络", "四渎", "天井", "清冷渊", "消泺", "臑会", "肩髎", "天髎", "天牗", "翳风", "瘛脉", "颅息", "角孙", "耳门", "禾髎", "丝竹空"]
+        acupoint: ["关冲", "液门", "中渚", "阳池", "外关", "支沟", "会宗", "三阳络", "四渎", "天井", "清冷渊", "消泺", "臑会", "肩髎", "天髎", "天牖", "翳风", "瘛脉", "颅息", "角孙", "耳门", "禾髎", "丝竹空"]
     },
     {
         id: "dan",
@@ -147,11 +147,6 @@ function showPicture() {
             eleImage.className = "disappear";
         }
     }
-    if (window.speechSynthesis) {
-        playVoice.className = "appear";
-    } else {
-        playVoice.className = "disappear";
-    }
 }
 
 function ord(i) {
@@ -160,10 +155,13 @@ function ord(i) {
 }
 
 function size(s) {
+    var space = "\u3000";
+
+    var ret = s + space;
     if (s.length < 3) {
-        return s + "\u3000" + "\u3000";
+        return ret += space;
     }
-    return s + "\u3000";
+    return ret;
 }
 
 function enableDictating() {
@@ -303,7 +301,8 @@ function showContent() {
         list.push("");
     }
     acupointList = list.join("");
-    dictation.innerHTML = "";
+    //dictation.innerHTML = "";
+    dictation.className = "disappear";
     acupoint.innerHTML = acupointList;
 
     if (selectedIndex > 0) {
