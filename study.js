@@ -155,13 +155,7 @@ function ord(i) {
 }
 
 function size(s) {
-    var space = "\u3000";
-
-    var ret = s + space;
-    if (s.length < 3) {
-        return ret += space;
-    }
-    return ret;
+    return s.length < 3 ? s + "\u3000" + " " : s + " ";
 }
 
 function enableDictating() {
@@ -244,6 +238,9 @@ function reciteChanged() {
         dictation.focus();
     }
     if (currentAcupointIndex === meridians[menu.selectedIndex - 1].acupoint.length) {
+        currentAcupointIndex = 0;
+        currentList = "";
+        dictationList.innerHTML = currentList;
         finish();
     }
     order.innerHTML = ord(currentAcupointIndex + 1);
