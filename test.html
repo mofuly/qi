@@ -6,19 +6,80 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>穴位学习</title>
+    <style>
+        .image {
+            position: relative;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 0;
+            padding-top: 100%;
+        }
+
+        img {
+            position: absolute;
+            left: 0;
+            top: 0;
+            /* width: 100%; */
+            height: 100%;
+        }
+
+        .disappear {
+            visibility: hidden;
+            display: none;
+        }
+
+        .appear {
+            visibility: visible;
+            display: inline;
+        }
+
+        input {
+            display: inline;
+            border: 1px;
+            border-color: red;
+        }
+
+        .acupointHidden {
+            color: grey;
+            background-color: grey;
+        }
+
+        .hinted {
+            color: red;
+        }
+
+        #hintText {
+            color: red;
+        }
+    </style>
 </head>
 
 <body>
-    <div id="hello"></div>
-    <script>
-        class Hello {
-            hello() {
-                document.getElementById("hello").innerHTML = "hello,world";
-            }
-        }
-        var h = new Hello();
-        h.hello();
-    </script>
+    <select id="menu"></select>
+    <button id="recite" type="button" class="disappear">默写</button>
+    <button id="hint" type="button" class="disappear">提示</button></br>
+    <span id="order" class="disappear"></span>
+    <span id="hintText"></span>
+    <input id="acupoint" type="text"></input>
+    <table id="acupointList"></table>
+    <div class="image">
+        <img src="http://p1.pstatp.com/large/2eda0004e2134dfc578e" id="duMai" class="disappear"></img>
+        <img src="http://p1.pstatp.com/large/2ed40004f6e6a9eb498b" id="fei" class="disappear"></img>
+        <img src="http://p3.pstatp.com/large/2ed40004f6e52a6bddcc" id="daChang" class="disappear"></img>
+        <img src="http://p3.pstatp.com/large/2edc0004d4e0ae5915e1" id="wei" class="disappear"></img>
+        <img src="http://p1.pstatp.com/large/2ecd0002064cb5b4f1ea" id="pi" class="disappear"></img>
+        <img src="http://p1.pstatp.com/large/2ed500015ce7b31354dc" id="xin" class="disappear"></img>
+        <img src="http://p3.pstatp.com/large/2ed500015ce82c57737a" id="xiaoChang" class="disappear"></img>
+        <img src="http://p1.pstatp.com/large/2edc0004d4e132f9cad8" id="pangGuan" class="disappear"></img>
+        <img src="http://p1.pstatp.com/large/2ed40004f6e7209c7c4e" id="shen" class="disappear"></img>
+        <img src="http://p1.pstatp.com/large/2eda0004e2159280d7fb" id="xinBao" class="disappear"></img>
+        <img src="http://p3.pstatp.com/large/2ecf0002051f9523e0b8" id="sanJiao" class="disappear"></img>
+        <img src="http://p1.pstatp.com/large/2ed500015ce5231f078d" id="dan" class="disappear"></img>
+        <img src="http://p9.pstatp.com/large/2edc0004d4df138e5577" id="gang" class="disappear"></img>
+        <img src="http://p3.pstatp.com/large/2ed500015ce6365631ef" id="renMai" class="disappear"></img>
+    </div>
+    <script src="acupuncture.js"></script>
 </body>
 
 </html>
