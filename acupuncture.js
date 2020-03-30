@@ -157,7 +157,8 @@ class Meridian {
         let tab = [];
         let rows = 0,
             cols = 0,
-            position = 0;
+            position = 0,
+            acupointName = "";
         if (!this.isMeridianIndexValid(meridianIndex)) return "";
         rows = this.cols[meridianIndex].length;
         cols = Math.max(...this.cols[meridianIndex]);
@@ -166,7 +167,9 @@ class Meridian {
             for (let col = 0; col < cols; col++) {
                 tab.push(`    <td>`);
                 if (col < this.cols[meridianIndex][row]) {
-                    tab.push(`        <span id="${this._genIdString(row,col)}">${this.acupoints[meridianIndex][position + col]}</span>`);
+                    acupointName = this.acupoints[meridianIndex][position + col].trim();
+                    if (acupointName.length < 3) acupointName += "\u3000";
+                    tab.push(`        <span id="${this._genIdString(row,col)}">${acupointName}</span>`);
                 }
                 tab.push(`    </td>`);
             }
@@ -197,24 +200,77 @@ class Reaction {
         this.order = document.getElementById("order");
         this.hintText = document.getElementById("hintText");
         this.acupoint = document.getElementById("acupoint");
+        this.say = document.getElementById("say");
+        this.expand = document.getElementById("expand");
         this.reciting = false;
         this.hinted = false;
+        this.expanded = true;
+        this.hintIndex = -1;
         this.hintList = [];
         this.currentAcupointIndex = 0;
         this.classAppear = "appear";
         this.classDisappear = "disappear";
         this.classAcupointHidden = "acupointHidden";
         this.classHinted = "hinted";
-
+        if (window.speechSynthesis) {
+            this.canSay = true;
+        } else {
+            this.canSay = false;
+        }
         this.menu.innerHTML = this.meridian.genMenu();
 
         this.menu.addEventListener("change", this.menuChange.bind(this));
         this.recite.addEventListener("click", this.reciteClick.bind(this));
         this.hint.addEventListener("click", this.hintClick.bind(this));
         this.acupoint.addEventListener("keyup", this.acupointChanged.bind(this));
+        if (this.canSay) {
+            this.say.addEventListener("click", this.sayClick.bind(this, event));
+        }
+        this.expand.addEventListener("click", this.expandClick.bind(this));
     }
 
-    acupointChanged() {
+    expandClick() {
+        if (this.expanded) {
+            this.expand.innerHTML = "展开";
+            this.acupointList.className = this.classDisappear;
+        } else {
+            this.expand.innerHTML = "收起"
+            this.acupointList.className = this.classAppear;
+        }
+        this.expanded = !this.expanded;
+        this.recite.focus();
+    }
+
+    sayClick() {
+        if (this.currentMenuIndex === 0) return;
+        if (speechSynthesis.speaking) return;
+        let acupointName = this.meridian.getAcupointName(this.currentMenuIndex - 1, this.currentAcupointIndex);
+        if (this.hintIndex !== this.currentAcupointIndex) {
+            this.hintIndex = this.currentAcupointIndex;
+            this.hintClick();
+        }
+        let utter = new window.SpeechSynthesisUtterance(acupointName);
+        speechSynthesis.speak(utter);
+        this.acupoint.focus();
+    }
+
+    acupointChanged(event) {
+        //console.log(event);
+        if (event.keyCode === 27) { // Esc
+            this.reciteClick();
+        };
+        if (event.keyCode === 186) { // ;
+            this.sayClick();
+            let s = this.acupoint.value;
+            this.acupoint.value = s.substr(0, s.length - 1);
+        }
+        if (event.keyCode === 32) { // space
+            let s = this.acupoint.value.trim();
+            if (s === "") {
+                this.hintClick();
+                this.acupoint.value = "";
+            }
+        }
         let acupoint = this.acupoint.value.trim();
         if (this.meridian.isAcupointNameEqual(acupoint, this.currentMenuIndex - 1, this.currentAcupointIndex)) {
             this.showAcupoint(this.menu.selectedIndex - 1, this.currentAcupointIndex);
@@ -224,7 +280,7 @@ class Reaction {
             }
             this.hintMark(false);
             this.currentAcupointIndex++;
-            this.order.innerHTML = `穴位序号:${this.meridian.ord(this.currentAcupointIndex)}`;
+            this.order.innerHTML = `${this.meridian.ord(this.currentAcupointIndex)}`;
             this.hintText.innerHTML = "";
             this.hinted = false;
             this.acupoint.value = "";
@@ -240,16 +296,25 @@ class Reaction {
         this.hintList = [];
         this.menu.disabled = "";
         this.recite.innerHTML = "默写";
+        this.expand.className = this.classAppear;
         this.acupoint.value = "";
+        this.hintIndex = -1;
         this.order.className = this.classDisappear;
         this.hint.className = this.classDisappear;
         this.acupoint.className = this.classDisappear;
         this.hintText.className = this.classDisappear;
+        this.say.className = this.classDisappear;
         this.showPicture(this.currentMenuIndex - 1);
+        if (this.expanded) {
+            this.acupointList.className = this.classAppear;
+        } else {
+            this.acupointList.className = this.classDisappear;
+        }
+        this.recite.focus();
     }
 
     hintClick() {
-        if (this.menu.selectedIndex === 0) {
+        if (this.currentMenuIndex === 0) {
             this.acupoint.focus();
             return;
         }
@@ -257,11 +322,12 @@ class Reaction {
             this.acupoint.focus();
             return;
         }
-        let acupointName = this.meridian.getAcupointName(this.menu.selectedIndex - 1, this.currentAcupointIndex);
+        let acupointName = this.meridian.getAcupointName(this.currentMenuIndex - 1, this.currentAcupointIndex);
         this.hintText.innerHTML = acupointName;
         this.hintText.className = this.classAppear;
         this.hinted = true;
-        this.hintList.push(this.meridian.getIdString(acupointName, this.menu.selectedIndex - 1));
+        this.hintList.push(this.meridian.getIdString(acupointName, this.currentMenuIndex - 1));
+        this.hintIndex = this.currentAcupointIndex;
         this.acupoint.focus();
     }
 
@@ -329,26 +395,41 @@ class Reaction {
         if (!this.reciting) {
             this.menu.disabled = "disabled";
             this.recite.innerHTML = "交卷";
+            this.expand.className = this.classDisappear;
             this.hint.className = this.classAppear;
             this.acupoint.className = this.classAppear;
             this.order.className = this.classAppear;
             this.hidePicture();
             this.acupoint.focus();
-            this.order.innerHTML = `穴位序号:${this.meridian.ord(this.currentAcupointIndex)}`;
+            this.order.innerHTML = `${this.meridian.ord(this.currentAcupointIndex)}`;
             this.hideAcupoints();
             this.hintMark(false);
+            if (this.canSay) this.say.className = this.classAppear;
+            this.acupointList.className = this.classAppear;
         } else {
             this.menu.disabled = "";
             this.recite.innerHTML = "默写";
-            this.showPicture(this.menu.selectedIndex - 1);
+            this.showPicture(this.currentMenuIndex - 1);
             this.hint.className = this.classDisappear;
             this.acupoint.className = this.classDisappear;
+            this.expand.className = this.classAppear;
             this.hintText.className = this.classDisappear;
             this.order.className = this.classDisappear;
+            this.say.className = this.classDisappear;
             this.acupoint.value = "";
             this.showAcupoints();
             this.hintMark(true);
             this.hinted = false;
+            if (this.hintIndex === this.currentAcupointIndex) {
+                this.hintList.pop();
+            }
+            this.hintIndex = -1;
+            if (this.expanded) {
+                this.acupointList.className = this.classAppear;
+            } else {
+                this.acupointList.className = this.classDisappear;
+            }
+            this.recite.focus();
         }
 
         this.reciting = !this.reciting;
@@ -359,12 +440,11 @@ class Reaction {
         this.acupointList.innerHTML = this.meridian.genTable(this.currentMenuIndex - 1);
 
         if (this.currentMenuIndex > 0) {
-            this.recite.className = "appear";
-        }
-        if (this.menu.selectedIndex === 0) {
-            this.recite.className = "disappear";
+            this.recite.className = this.classAppear;
+            this.expand.className = this.classAppear;
         } else {
-            this.recite.className = "appear";
+            this.recite.className = this.classDisappear;
+            this.expand.className = this.classDisappear
         }
         this.hidePicture();
         if (this.menu.selectedIndex > 0) {
@@ -374,6 +454,7 @@ class Reaction {
         this.hinted = false;
         this.hintList = [];
         this.currentAcupointIndex = 0;
+        this.recite.focus();
     }
 
 }
